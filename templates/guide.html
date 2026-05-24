@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="{{ lang or 'ko' }}">
+<head>
+  <meta charset="UTF-8">
+  <title>{{ t.guide_title }}</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+
+<body class="guide-body">
+
+<div class="guide-container">
+
+  <div class="language-switch">
+    <a href="/guide?lang=ko">한국어</a>
+    |
+    <a href="/guide?lang=en">English</a>
+  </div>
+
+  <h1>{{ t.guide_title }}</h1>
+
+  <div class="guide-step">
+    <h2>{{ t.guide_step1_title }}</h2>
+    <p>{{ t.guide_step1_text }}</p>
+  </div>
+
+  <div class="guide-step">
+    <h2>{{ t.guide_step2_title }}</h2>
+    <p>{{ t.guide_step2_text1 }}</p>
+    <p>{{ t.guide_step2_text2 }}</p>
+    <p>{{ t.guide_step2_text3 }}</p>
+    <p>{{ t.guide_step2_text4 }}</p>
+  </div>
+
+  <div class="guide-step">
+    <h2>{{ t.guide_step3_title }}</h2>
+    <p>{{ t.guide_step3_text }}</p>
+  </div>
+
+  <div class="guide-step">
+    <h2>{{ t.guide_step4_title }}</h2>
+    <p>{{ t.guide_step4_text1 }}</p>
+    <p>{{ t.guide_step4_text2 }}</p>
+    <p>{{ t.guide_step4_text3 }}</p>
+  </div>
+
+  <div class="guide-step">
+    <h2>{{ t.guide_step5_title }}</h2>
+    <p>{{ t.guide_step5_text1 }}</p>
+    <p>{{ t.guide_step5_text2 }}</p>
+  </div>
+
+  <div class="guide-step">
+    <h2>{{ t.guide_result_title }}</h2>
+    <p>{{ t.guide_result_text1 }}</p>
+    <p>{{ t.guide_result_text2 }}</p>
+  </div>
+
+  <div class="back">
+    <a href="/?lang={{ lang }}" class="btn-main">{{ t.back_home }}</a>
+  </div>
+
+</div>
+
+</body>
+</html>

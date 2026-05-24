@@ -1,0 +1,1850 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>RAIS Human Core v3</title>
+  <style>
+    /*
+      임시 구조 스케치용 스타일
+      실제 적용 시 기존 index.html의 CSS를 최대한 재사용하고,
+      필요한 부분만 선택적으로 교체하는 방식 권장
+    */
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: #f4f7fb;
+      color: #1f2937;
+    }
+
+    .page-wrap {
+      max-width: 1280px;
+      margin: 0 auto;
+      padding: 24px;
+      padding-bottom: 120px;
+    }
+
+    .page-header {
+      margin-bottom: 20px;
+    }
+
+    .page-header h1 {
+      margin: 0 0 6px;
+      font-size: 28px;
+    }
+
+    .page-header p {
+      margin: 0;
+      color: #4b5563;
+      line-height: 1.5;
+    }
+
+    .form-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 18px;
+      align-items: start;
+    }
+
+    .panel {
+      background: #fff;
+      border-radius: 16px;
+      padding: 14px;
+      box-shadow: 0 4px 14px rgba(0,0,0,0.06);
+      border: 1px solid #e5e7eb;
+      margin-bottom: 10px;
+    }
+
+    .panel h2 {
+      margin: 0 0 10px;
+      font-size: 18px;
+    }
+
+    .panel-desc {
+      margin: -4px 0 14px;
+      color: #6b7280;
+      font-size: 14px;
+      line-height: 1.25;
+    }
+
+    .panel-experience .section-guide {
+      margin: 4px 0 10px;
+      font-size: 13px;
+      color: #666;
+    }
+
+    .panel-basic-info .row-4 {
+      display: grid;
+      grid-template-columns: 1.1fr 0.8fr 1.1fr 1fr;
+      gap: 12px;
+      align-items: end;
+    }
+
+    .panel-basic-info input[type="text"] {
+      max-width: 100px;
+    }
+
+    .experience-box {
+      margin-bottom: 10px;
+    }
+
+    .experience-actions {
+      margin-top: 8px;
+    }
+
+    .experience-actions-inline {
+      margin-top: 8px;
+      display: flex;
+      justify-content: flex-end;
+    }
+
+    .row-3 {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 12px;
+    }
+
+    @media (max-width: 900px) {
+      .row-3 {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .subsection {
+      margin-bottom: 12px;
+      padding-bottom: 10px;
+      border-bottom: 1px solid #eef2f7;
+    }
+
+    .subsection:last-child {
+      margin-bottom: 0;
+      padding-bottom: 0;
+      border-bottom: none;
+    }
+
+    .subsection h3 {
+      margin: 0 0 8px;
+      font-size: 16px;
+    }
+
+    .subsection p.help {
+      margin: 0 0 6px;
+      color: #6b7280;
+      font-size: 12px;
+    }
+
+    .row-2,
+    .row-3,
+    .row-4 {
+      display: grid;
+      gap: 8px;
+      align-items: end;
+    }
+
+    .row-2 {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .row-3 {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+
+    .row-4 {
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+    }
+
+    .birth-inline .birth-row {
+      display: grid;
+      grid-template-columns: 1fr 0.8fr;
+      gap: 8px;
+      align-items: center;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 2px;
+      font-size: 13px;
+    }
+
+    .highlight-action {
+      background: #eef6ff;
+      border-left: 4px solid #2563eb;
+      padding: 12px;
+      border-radius: 8px;
+      font-weight: 500;
+    }
+
+    @media (max-width: 1100px) {
+      .row-4 {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+    }
+
+    @media (max-width: 900px) {
+      .row-3 {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 700px) {
+      .row-2,
+      .row-4 {
+        grid-template-columns: 1fr;
+      }
+
+      .birth-inline .birth-row {
+        grid-template-columns: 1fr 1fr;
+      }
+    }
+    .field label {
+      display: block;
+      margin-bottom: 6px;
+      font-size: 14px;
+      font-weight: 600;
+    }
+
+    .field input,
+    .field select,
+    .field textarea {
+      width: 100%;
+      padding: 10px 12px;
+      border: 1px solid #d1d5db;
+      border-radius: 10px;
+      font-size: 14px;
+      background: #fff;
+    }
+
+    .choice-group {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .choice-chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 8px 12px;
+      border: 1px solid #cfd8e3;
+      border-radius: 999px;
+      background: #f9fbfd;
+      font-size: 14px;
+      cursor: pointer;
+    }
+
+    .choice-chip input {
+      width: auto;
+      margin: 0;
+    }
+
+    .mini-box {
+      background: #f8fafc;
+      border: 1px solid #e5e7eb;
+      border-radius: 12px;
+      padding: 6px;
+      margin-bottom: 4px;
+    }
+
+    .mini-box:last-child {
+      margin-bottom: 0;
+    }
+
+    .exp-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 10px;
+    }
+
+    .exp-header h3 {
+      margin: 0;
+      font-size: 15px;
+    }
+
+    .btn-row {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    button {
+      border: none;
+      border-radius: 12px;
+      padding: 12px 16px;
+      font-size: 14px;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    .btn-primary { background: #1d4ed8; color: #fff; }
+    .btn-secondary { background: #e5e7eb; color: #111827; }
+    .btn-light { background: #f3f4f6; color: #111827; }
+
+    .full-span {
+      grid-column: 1 / -1;
+    }
+
+    @media (max-width: 980px) {
+      .form-grid,
+      .row-2,
+      .row-3 {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    /* 3번 카드 전체 압축 */
+    .panel-nature,
+    .panel-current-state,
+    .panel-experience,
+    .panel-exec,
+    .panel-basic-info,
+    .panel-essence {
+      padding: 12px;
+    }
+
+    /* subsection 간격 축소 */
+    .subsection {
+      margin-bottom: 12px;
+      padding-bottom: 10px;
+    }
+
+    .subsection h3 {
+      margin: 0 0 4px;
+      font-size: 15px;
+    }
+
+    .subsection p.help {
+      margin: 0 0 6px;
+      font-size: 12px;
+      line-height: 1.35;
+    }
+
+    /* 체크 옵션 묶음 간격 축소 */
+    .chip-group,
+    .checkbox-group,
+    .option-group {
+      gap: 6px;
+    }
+
+    /* 체크 칩 자체 크기 축소 */
+    .chip,
+    .pill,
+    .option-pill,
+    .checkbox-pill {
+      padding: 6px 12px;
+      font-size: 13px;
+      border-radius: 999px;
+    }
+
+    /* 체크박스와 글자 간격 */
+    .chip input,
+    .pill input,
+    .option-pill input,
+    .checkbox-pill input {
+      margin-right: 4px;
+    }
+
+    /* 3번 카드 제목 아래 설명 줄이기 */
+    .panel-desc {
+      margin: -2px 0 10px;
+      font-size: 13px;
+      line-height: 1.35;
+    }
+
+    /* panel 제목도 조금 더 압축 */
+    .panel h2 {
+      margin: 0 0 10px;
+      font-size: 18px;
+    }
+
+
+    /* 1 page compact layout */
+    .page-wrap {
+      max-width: 1400px;
+      padding: 6px 10px 4px;
+    }
+
+    .page-header {
+      margin-bottom: 8px;
+    }
+
+    .page-header h1 {
+      font-size: 22px;
+      margin-bottom: 2px;
+    }
+
+    .page-header p {
+      font-size: 13px;
+      line-height: 1.35;
+    }
+
+    .form-grid {
+      grid-template-columns: 0.82fr 1.18fr;
+      gap: 10px;
+    }
+
+    .panel {
+      padding: 7px 9px;
+      margin-bottom: 6px;
+      border-radius: 14px;
+    }
+
+    .panel h2 {
+      font-size: 16px;
+      margin-bottom: 6px;
+    }
+
+    .panel-desc {
+      margin: -2px 0 6px;
+      font-size: 12px;
+      line-height: 1.3;
+    }
+
+    .panel-basic-info .row-4 {
+      grid-template-columns: 1fr 0.7fr 1.1fr 1.1fr;
+      gap: 7px;
+    }
+
+    .panel-origin-nature {
+      grid-column: 1 / -1;
+    }
+
+    .panel-origin-nature .essence-subsection,
+    .panel-origin-nature .nature-heading-subsection {
+      margin-bottom: 6px;
+      padding-bottom: 6px;
+    }
+
+    .nature-sections {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 6px 8px;
+    }
+
+    .nature-sections .subsection {
+      margin-bottom: 0;
+      padding: 7px;
+      border: 1px solid #eef2f7;
+      border-radius: 12px;
+      background: #fbfdff;
+    }
+
+    .subsection h3 {
+      font-size: 13px;
+      margin-bottom: 3px;
+    }
+
+    .subsection p.help {
+      font-size: 11px;
+      margin-bottom: 4px;
+      line-height: 1.25;
+    }
+
+    .choice-group {
+      gap: 5px;
+    }
+
+    .choice-chip {
+      padding: 4px 7px;
+      font-size: 12px;
+      gap: 4px;
+    }
+
+    .choice-chip input {
+      transform: scale(0.9);
+    }
+
+    .field input,
+    .field select,
+    .field textarea,
+    select,
+    input {
+      padding: 7px 8px;
+      font-size: 13px;
+    }
+
+    .panel-current-state .subsection {
+      margin-bottom: 7px;
+      padding-bottom: 7px;
+    }
+
+    .panel-experience .section-guide {
+      font-size: 12px;
+      margin-bottom: 6px;
+    }
+
+    .mini-box {
+      padding: 8px;
+      margin-bottom: 6px;
+    }
+
+    .experience-box h3 {
+      margin: 0 0 5px;
+      font-size: 13px;
+    }
+
+    .row-4 {
+      gap: 6px;
+    }
+
+    button {
+      padding: 6px 10px;
+      border-radius: 10px;
+      font-size: 13px;
+    }
+
+    .panel-exec.full-span {
+      grid-column: 1 / -1;
+    }
+
+    .panel-exec {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+    }
+
+    .panel-exec h2,
+    .panel-exec .panel-desc {
+      margin: 0;
+    }
+
+
+    /* select list 1-page compression */
+    .compact-essence-row {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 7px;
+      margin-bottom: 8px;
+    }
+
+    .nature-select-grid {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 7px;
+    }
+
+    .nature-select-card {
+      padding: 7px;
+      border: 1px solid #eef2f7;
+      border-radius: 12px;
+      background: #fbfdff;
+    }
+
+    .nature-select-card h3 {
+      margin: 0 0 5px;
+      font-size: 13px;
+      color: #1f2937;
+    }
+
+    .compact-row {
+      gap: 5px;
+    }
+
+    .current-state-grid {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 7px;
+    }
+
+    .panel-origin-nature select,
+    .panel-current-state select {
+      height: 34px;
+      padding: 5px 8px;
+      font-size: 12.5px;
+    }
+
+    .panel-origin-nature label,
+    .panel-current-state label {
+      margin-bottom: 3px;
+      font-size: 12px;
+      font-weight: 700;
+    }
+
+    @media (max-width: 1100px) {
+      .nature-select-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .current-state-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    }
+
+    @media (max-width: 700px) {
+      .compact-essence-row,
+      .nature-select-grid,
+      .current-state-grid { grid-template-columns: 1fr; }
+    }
+
+    /* final 1-page balance adjustments */
+    .section-label {
+      margin: 2px 0 6px;
+      font-size: 13px;
+      font-weight: 800;
+      color: #1d4ed8;
+      line-height: 1.2;
+    }
+
+    .essence-subsection {
+      margin-bottom: 8px;
+      padding-bottom: 7px;
+      border-bottom: 1px solid #eef2f7;
+    }
+
+    .nature-heading-subsection {
+      margin: 0 0 6px;
+      padding: 0;
+      border: 0;
+    }
+
+    .panel-current-state {
+      grid-column: 1 / -1;
+    }
+
+    .panel-experience {
+      grid-column: 1 / -1;
+      padding-top: 7px;
+      padding-bottom: 7px;
+    }
+
+    .graph-box {
+      margin: 10px 0;
+    }
+
+    canvas {
+      max-width: 100%;
+    }
+
+    @media print {
+      .graph-section,
+      .graph-box,
+      canvas {
+        display: block !important;
+        visibility: visible !important;
+        page-break-inside: avoid;
+      }
+
+      .graph-box {
+        max-width: 100% !important;
+      }
+
+      canvas {
+        width: 100% !important;
+        height: 180px !important;
+      }
+
+    }
+
+    .graph-section {
+      margin: 12px 0 6px;
+    }
+
+    .graph-box {
+      max-width: 600px;
+      margin: 10px auto
+      height: 220px;
+    }
+
+    .graph-box canvas {
+      height: 220px !important;
+    }
+
+    .panel-experience h2 { margin-bottom: 3px; }
+    .panel-experience .section-guide { margin: 0 0 4px; font-size: 11.5px; line-height: 1.25; }
+    .panel-experience .mini-box { padding: 4px 6px; margin-bottom: 3px; }
+    .panel-experience .experience-box h3 { margin: 0 0 4px; font-size: 12px; }
+    .panel-experience .experience-actions,
+    .panel-experience .experience-actions-inline { margin-top: 0px; }
+    .panel-experience .experience-actions-inline button { min-height: 24px; padding: 2px 8px; font-size: 12px; }
+    .panel-exec { align-items: center; }
+    .exec-copy { margin-left: auto; font-size: 11px; color: #888; white-space: nowrap; }
+
+
+
+    /* final top header matching RAIS Core screen */
+    .top-copy { text-align: center; margin: 0 0 10px; padding: 16px 10px; background: #eef4fb; border-radius: 10px; }
+    .top-copy h2 { margin: 0; font-size: 25px; font-weight: 800; color: #0f335d; letter-spacing: -0.3px; }
+    .system-header { text-align: center; margin: 10px 0 2px; }
+    .system-header h1 { margin: 0; font-size: 28px; font-weight: 800; color: #0f335d; letter-spacing: -0.4px; line-height: 1.2; }
+    .intro-hero { margin: 0 0 6px; padding: 5px 8px 7px; background: #eef4fb; border: 1px solid #d8e2ee; border-radius: 10px; text-align: center; color: #0f335d; }
+    .intro-hero-title { margin: 0; font-size: 14px; font-weight: 700; line-height: 1.2; }
+    .intro-hero-desc { margin-top: 2px; font-size: 13px; line-height: 1.25; }
+    .page-footer { margin: 3px 0 0; text-align: center; font-size: 11px; color: #7a8ba0; line-height: 1.2; }
+
+    @media print {
+      .top-copy,
+      .system-header,
+      .intro-hero,
+      .page-header,
+      form,
+      .panel-basic-info,
+      .panel-essence,
+      .panel-nature,
+      .panel-current-state,
+      .panel-experience,
+      .panel-exec,
+      .btn-row,
+      .page-footer,
+      button {
+        display: none !important;
+      }
+
+      .result-panel {
+        display: block !important;
+        margin-top: 0 !important;
+        box-shadow: none !important;
+        border: none !important;
+      }
+
+      body {
+        background: #fff !important;
+      }
+
+      .page-wrap {
+        padding: 0 !important;
+        max-width: 100% !important;
+      }
+    }
+
+    /* =========================
+       MOBILE FINAL TUNING - v3
+    ========================= */
+
+    @media (max-width: 768px) {
+      body {
+        background: #f4f7fb;
+        font-size: 14px;
+      }
+
+      .page-wrap {
+        padding: 8px 8px 60px;
+        max-width: 100%;
+      }
+
+      .top-copy {
+        padding: 10px 8px;
+        margin-bottom: 8px;
+      }
+
+      .top-copy h2 {
+        font-size: 18px;
+        line-height: 1.3;
+      }
+
+      .system-header h1 {
+        font-size: 22px;
+        line-height: 1.25;
+      }
+
+      .intro-hero {
+        padding: 8px;
+        margin-bottom: 8px;
+      }
+
+      .intro-hero-desc {
+        font-size: 13px;
+        line-height: 1.4;
+      }
+
+      .form-grid {
+        display: block;
+      }
+
+      .panel {
+        padding: 12px;
+        margin-bottom: 10px;
+        border-radius: 14px;
+      }
+
+      .panel h2 {
+        font-size: 17px;
+        margin-bottom: 8px;
+      }
+
+      .panel-desc {
+        font-size: 13px;
+        line-height: 1.45;
+        margin-bottom: 10px;
+      }
+
+      .panel-basic-info .row-4,
+      .compact-essence-row,
+      .nature-select-grid,
+      .current-state-grid,
+      .row-4,
+      .row-3,
+      .row-2 {
+        grid-template-columns: 1fr !important;
+        gap: 8px;
+      }
+
+      .birth-inline .birth-row {
+        grid-template-columns: 1fr 1fr !important;
+      }
+
+      .field label,
+      label {
+        font-size: 13px;
+        margin-bottom: 4px;
+      }
+
+      .field input,
+      .field select,
+      .field textarea,
+      select,
+      input {
+        width: 100%;
+        height: 40px;
+        font-size: 14px;
+        padding: 8px 10px;
+      }
+
+      .nature-select-card {
+        padding: 10px;
+        border-radius: 12px;
+      }
+
+      .nature-select-card h3 {
+        font-size: 14px;
+        margin-bottom: 8px;
+      }
+
+      .section-label {
+        font-size: 14px;
+        margin-bottom: 8px;
+      }
+
+      .panel-exec {
+        display: block;
+      }
+
+      .btn-row {
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 8px;
+      }
+
+      button {
+        width: 100%;
+        min-height: 42px;
+        font-size: 14px;
+        padding: 10px 12px;
+      }
+
+      .mini-box {
+        padding: 10px;
+      }
+
+      .experience-actions-inline {
+        margin-top: 8px;
+      }
+
+      .result-panel {
+        margin-top: 12px !important;
+        overflow: visible;
+      }
+
+      .result-panel h2 {
+        font-size: 20px;
+      }
+
+      .result-panel .subsection h3 {
+        font-size: 15px;
+        line-height: 1.4;
+      }
+
+      .result-panel,
+      .subsection,
+      .result-text {
+        overflow: visible;
+      }
+
+      .result-text {
+        white-space: pre-line;
+        line-height: 1.7;
+        word-break: keep-all;
+        overflow-wrap: break-word;
+      }
+
+      .subsection {
+        overflow: visible;
+      }
+      .graph-box {
+        max-width: 100%;
+        margin: 8px auto;
+        height: 220px;
+      }
+
+      .graph-box canvas {
+        height: 220px !important;
+      }
+
+      .page-footer {
+        font-size: 11px;
+        margin-top: 10px;
+      }
+    }
+  </style>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+  <div class="page-wrap">
+    <div class="top-copy">
+      {{ t.top_message }}
+    </div>
+
+    <div class="system-header">
+      <h1>{{ t.app_title }} ⓘ</h1>
+    </div>
+
+    <div class="intro-hero">
+      <div class="intro-hero-desc">
+        {{ t.sub_message }}
+      </div>
+    </div>
+
+    <form method="POST" action="{{ url_for('index') }}" id="raisHumanForm">
+      <input type="hidden" name="lang" value="{{ lang }}">
+      <div class="form-grid">
+
+        <!-- Card 1. 기본 정보 -->
+        <section class="panel panel-basic-info">
+          <h2>{{ t.section_basic }}</h2>
+          <div class="row-4">
+            <div>
+              <label for="name">{{ t.label_name }}</label>
+              <input type="text" id="name" name="name" value="{{ raw_form_data.get('name', '') }}">
+            </div>
+
+            <div>
+              <label for="gender">{{ t.label_gender }}</label>
+              <select id="gender" name="gender">
+                <option value="">{{ t.option_select }}</option>
+                <option value="남성" {% if raw_form_data.get('gender') == '남성' %}selected{% endif %}>{{ t.gender_male }}</option>
+                <option value="여성" {% if raw_form_data.get('gender') == '여성' %}selected{% endif %}>{{ t.gender_female }}</option>
+              </select>
+            </div>
+
+            <div class="birth-inline">
+              <label>{{ t.label_birth }}</label>
+              <div class="birth-row">
+                <select id="birth_year" name="birth_year">
+                  <option value="">{{ t.option_year }}</option>
+                  {% for y in range(1950, 2027) %}
+                    <option value="{{ y }}" {% if raw_form_data.get('birth_year') == y|string %}selected{% endif %}>{{ y }}</option>
+                  {% endfor %}
+                </select>
+
+                <select id="birth_month" name="birth_month">
+                  <option value="">{{ t.option_month }}</option>
+                  {% for m in range(1, 13) %}
+                    <option value="{{ m }}" {% if raw_form_data.get('birth_month') == m|string %}selected{% endif %}>{{ m }}월</option>
+                  {% endfor %}
+                </select>
+              </div>
+            </div>
+
+            <div>
+              <label for="job">{{ t.label_job }}</label>
+              <select id="job" name="job">
+                <option value="">{{ t.option_select }}</option>
+                <option value="농축산어업" {% if raw_form_data.get('job') == '농축산어업' %}selected{% endif %}>{{ t.exp_job_agriculture }}</option>
+                <option value="자영업/사업" {% if raw_form_data.get('job') == '자영업/사업' %}selected{% endif %}>{{ t.exp_job_business_owner }}</option>
+                <option value="회사원" {% if raw_form_data.get('job') == '회사원' %}selected{% endif %}>{{ t.exp_job_employee }}</option>
+                <option value="공무원/공공직" {% if raw_form_data.get('job') == '공무원/공공직' %}selected{% endif %}>{{ t.exp_job_public }}</option>
+                <option value="교육직" {% if raw_form_data.get('job') == '교육직' %}selected{% endif %}>{{ t.exp_job_education }}</option>
+                <option value="연구/전문직" {% if raw_form_data.get('job') == '연구/전문직' %}selected{% endif %}>{{ t.exp_job_professional }}</option>
+                <option value="기능/기술직" {% if raw_form_data.get('job') == '기능/기술직' %}selected{% endif %}>{{ t.exp_job_technical }}</option>
+                <option value="문화/예술/체육" {% if raw_form_data.get('job') == '문화/예술/체육' %}selected{% endif %}>{{ t.exp_job_culture }}</option>
+                <option value="보건/복지/돌봄" {% if raw_form_data.get('job') == '보건/복지/돌봄' %}selected{% endif %}>{{ t.exp_job_healthcare }}</option>
+                <option value="서비스/판매" {% if raw_form_data.get('job') == '서비스/판매' %}selected{% endif %}>{{ t.exp_job_service_sales }}</option>
+                <option value="가정/전업주부" {% if raw_form_data.get('job') == '가정/전업주부' %}selected{% endif %}>{{ t.exp_job_homemaker }}</option>
+                <option value="학생" {% if raw_form_data.get('job') == '학생' %}selected{% endif %}>{{ t.exp_job_student }}</option>
+                <option value="프리랜서" {% if raw_form_data.get('job') == '프리랜서' %}selected{% endif %}>{{ t.exp_job_freelancer }}</option>
+                <option value="일용직/알바" {% if raw_form_data.get('job') == '일용직/알바' %}selected{% endif %}>{{ t.exp_job_part_time }}</option>
+                <option value="은퇴/전환기" {% if raw_form_data.get('job') == '은퇴/전환기' %}selected{% endif %}>{{ t.exp_job_retired_transition }}</option>
+                <option value="무직/기타" {% if raw_form_data.get('job') == '무직/기타' %}selected{% endif %}>{{ t.exp_job_unemployed_other }}</option>
+              </select>
+            </div>
+          </div>
+        </section>
+
+        <!-- Card 2. 본질 / 본성 -->
+        <section class="panel panel-essence panel-origin-nature full-span">
+          <h2>{{ t.section_essence }}</h2>
+          <p class="panel-desc">{{ t.desc_essence_nature }}</p>
+
+          <div class="essence-subsection">
+            <div class="section-label">{{ t.label_essence_select }}</div>
+
+            <div class="compact-essence-row">
+              <div class="field">
+                <label>{{ t.label_essence_1 }}</label>
+                <select name="essence" class="essence-select" onchange="validateEssenceSelects(); updateEssenceDesc();">
+                  <option value="">{{ t.option_select }}</option>
+                  <option value="adaptability">{{ t.essence_adaptability }}</option>
+                  <option value="learning">{{ t.essence_learning }}</option>
+                  <option value="relation">{{ t.essence_relation }}</option>
+                  <option value="expression">{{ t.essence_expression }}</option>
+                  <option value="drive">{{ t.essence_drive }}</option>
+                  <option value="safety">{{ t.essence_safety }}</option>
+                  <option value="reaction">{{ t.essence_reaction }}</option>
+                  <option value="masculinity">{{ t.essence_masculinity }}</option>
+                  <option value="femininity">{{ t.essence_femininity }}</option>
+                </select>
+              </div>
+
+              <div class="field">
+                <label>{{ t.label_essence_2 }}</label>
+                <select name="essence" class="essence-select" onchange="validateEssenceSelects(); updateEssenceDesc();">
+                  <option value="">{{ t.option_select }}</option>
+                  <option value="adaptability">{{ t.essence_adaptability }}</option>
+                  <option value="learning">{{ t.essence_learning }}</option>
+                  <option value="relation">{{ t.essence_relation }}</option>
+                  <option value="expression">{{ t.essence_expression }}</option>
+                  <option value="drive">{{ t.essence_drive }}</option>
+                  <option value="safety">{{ t.essence_safety }}</option>
+                  <option value="reaction">{{ t.essence_reaction }}</option>
+                  <option value="masculinity">{{ t.essence_masculinity }}</option>
+                  <option value="femininity">{{ t.essence_femininity }}</option>
+                </select>
+              </div>
+
+              <div class="field">
+                <label>{{ t.label_essence_3 }}</label>
+                <select name="essence" class="essence-select" onchange="validateEssenceSelects(); updateEssenceDesc();">
+                  <option value="">{{ t.option_select }}</option>
+                  <option value="adaptability">{{ t.essence_adaptability }}</option>
+                  <option value="learning">{{ t.essence_learning }}</option>
+                  <option value="relation">{{ t.essence_relation }}</option>
+                  <option value="expression">{{ t.essence_expression }}</option>
+                  <option value="drive">{{ t.essence_drive }}</option>
+                  <option value="safety">{{ t.essence_safety }}</option>
+                  <option value="reaction">{{ t.essence_reaction }}</option>
+                  <option value="masculinity">{{ t.essence_masculinity }}</option>
+                  <option value="femininity">{{ t.essence_femininity }}</option>
+                </select>
+              </div>
+            </div>
+          </div>
+
+          <div class="nature-heading-subsection">
+            <div class="section-label">{{ t.label_nature_select }}</div>
+          </div>
+          <div class="nature-select-grid">
+            <div class="nature-select-card">
+              <h3>{{ t.nature_group_a }}</h3>
+              <div class="row-2 compact-row">
+                <div class="field">
+                  <label>{{ t.label_primary }}</label>
+                  <select id="nature_A_primary" name="nature_action" onchange="validateNaturePair('A')">
+                    <option value="">{{ t.option_select }}</option>
+                    <option value="execution">{{ t.nature_execution }}</option>
+                    <option value="challenge">{{ t.nature_challenge }}</option>
+                    <option value="drive">{{ t.nature_drive }}</option>
+                    <option value="initiative">{{ t.nature_initiative }}</option>
+                    <option value="responsibility">{{ t.nature_responsibility }}</option>
+                    <option value="active">{{ t.nature_active }}</option>
+                    <option value="competitive">{{ t.nature_competitive }}</option>
+                  </select>
+                </div>
+                <div class="field">
+                  <label>{{ t.label_secondary }}</label>
+                  <select id="nature_A_secondary" name="nature_action" onchange="validateNaturePair('A')">
+                    <option value="">{{ t.option_select }}</option>
+                    <option value="execution">{{ t.nature_execution }}</option>
+                    <option value="challenge">{{ t.nature_challenge }}</option>
+                    <option value="drive">{{ t.nature_drive }}</option>
+                    <option value="initiative">{{ t.nature_initiative }}</option>
+                    <option value="responsibility">{{ t.nature_responsibility }}</option>
+                    <option value="active">{{ t.nature_active }}</option>
+                    <option value="competitive">{{ t.nature_competitive }}</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+            <div class="nature-select-card">
+              <h3>{{ t.nature_group_b }}</h3>
+              <div class="row-2 compact-row">
+                <div class="field">
+                  <label>{{ t.label_primary }}</label>
+                  <select id="nature_B_primary" name="nature_cognition" onchange="validateNaturePair('B')">
+                    <option value="">{{ t.option_select }}</option>
+                    <option value="analysis">{{ t.nature_analysis }}</option>
+                    <option value="exploration">{{ t.nature_inquiry }}</option>
+                    <option value="judgment">{{ t.nature_judgment }}</option>
+                    <option value="creativity">{{ t.nature_creativity }}</option>
+                    <option value="logic">{{ t.nature_logic }}</option>
+                    <option value="intuition">{{ t.nature_intuition }}</option>
+                  </select>
+                </div>
+                <div class="field">
+                  <label>{{ t.label_secondary }}</label>
+                  <select id="nature_B_secondary" name="nature_cognition" onchange="validateNaturePair('B')">
+                    <option value="">{{ t.option_select }}</option>
+                    <option value="analysis">{{ t.nature_analysis }}</option>
+                    <option value="exploration">{{ t.nature_inquiry }}</option>
+                    <option value="judgment">{{ t.nature_judgment }}</option>
+                    <option value="creativity">{{ t.nature_creativity }}</option>
+                    <option value="logic">{{ t.nature_logic }}</option>
+                    <option value="intuition">{{ t.nature_intuition }}</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+            <div class="nature-select-card">
+              <h3>{{ t.nature_group_c }}</h3>
+              <div class="row-2 compact-row">
+                <div class="field">
+                  <label>{{ t.label_primary }}</label>
+                  <select id="nature_C_primary" name="nature_social" onchange="validateNaturePair('C')">
+                    <option value="">{{ t.option_select }}</option>
+                    <option value="relation_oriented">{{ t.nature_relation_oriented }}</option>
+                    <option value="relation_harmony">{{ t.nature_relation_harmony }}</option>
+                    <option value="influence">{{ t.nature_influence }}</option>
+                    <option value="empathy">{{ t.nature_empathy }}</option>
+                    <option value="communication">{{ t.nature_communication }}</option>
+                    <option value="inclusion">{{ t.nature_inclusion }}</option>
+                    <option value="expression">{{ t.nature_expression }}</option>
+                    <option value="understanding">{{ t.nature_understanding }}</option>
+                    <option value="self_expression">{{ t.nature_self_expression }}</option>
+                  </select>
+                </div>
+                <div class="field">
+                  <label>{{ t.label_secondary }}</label>
+                  <select id="nature_C_secondary" name="nature_social" onchange="validateNaturePair('C')">
+                    <option value="">{{ t.option_select }}</option>
+                    <option value="relation_oriented">{{ t.nature_relation_oriented }}</option>
+                    <option value="relation_harmony">{{ t.nature_relation_harmony }}</option>
+                    <option value="influence">{{ t.nature_influence }}</option>
+                    <option value="empathy">{{ t.nature_empathy }}</option>
+                    <option value="communication">{{ t.nature_communication }}</option>
+                    <option value="inclusion">{{ t.nature_inclusion }}</option>
+                    <option value="expression">{{ t.nature_expression }}</option>
+                    <option value="understanding">{{ t.nature_understanding }}</option>
+                    <option value="self_expression">{{ t.nature_self_expression }}</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+            <div class="nature-select-card">
+              <h3>{{ t.nature_group_d }}</h3>
+              <div class="row-2 compact-row">
+                <div class="field">
+                  <label>{{ t.label_primary }}</label>
+                  <select id="nature_D_primary" name="nature_change" onchange="validateNaturePair('D')">
+                    <option value="">{{ t.option_select }}</option>
+                    <option value="stability">{{ t.nature_stability }}</option>
+                    <option value="change">{{ t.nature_change }}</option>
+                    <option value="expansion">{{ t.nature_expansion }}</option>
+                    <option value="conservative">{{ t.nature_conservative }}</option>
+                    <option value="risk_avoidance">{{ t.nature_risk_avoidance }}</option>
+                  </select>
+                </div>
+                <div class="field">
+                  <label>{{ t.label_secondary }}</label>
+                  <select id="nature_D_secondary" name="nature_change" onchange="validateNaturePair('D')">
+                    <option value="">{{ t.option_select }}</option>
+                    <option value="stability">{{ t.nature_stability }}</option>
+                    <option value="change">{{ t.nature_change }}</option>
+                    <option value="expansion">{{ t.nature_expansion }}</option>
+                    <option value="conservative">{{ t.nature_conservative }}</option>
+                    <option value="risk_avoidance">{{ t.nature_risk_avoidance }}</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+            <div class="nature-select-card">
+              <h3>{{ t.nature_group_e }}</h3>
+              <div class="row-2 compact-row">
+                <div class="field">
+                  <label>{{ t.label_primary }}</label>
+                  <select id="nature_E_primary" name="nature_inner" onchange="validateNaturePair('E')">
+                    <option value="">{{ t.option_select }}</option>
+                    <option value="desire">{{ t.nature_desire }}</option>
+                    <option value="anxiety_sensitive">{{ t.nature_anxiety_sensitive }}</option>
+                    <option value="self_centered">{{ t.nature_self_centered }}</option>
+                    <option value="emotion_fluctuation">{{ t.nature_emotion_fluctuation }}</option>
+                    <option value="stress_sensitive">{{ t.nature_stress_sensitive }}</option>
+                    <option value="comparison_sensitive">{{ t.nature_comparison_sensitive }}</option>
+                  </select>
+                </div>
+                <div class="field">
+                  <label>{{ t.label_secondary }}</label>
+                  <select id="nature_E_secondary" name="nature_inner" onchange="validateNaturePair('E')">
+                    <option value="">{{ t.option_select }}</option>
+                    <option value="desire">{{ t.nature_desire }}</option>
+                    <option value="anxiety_sensitive">{{ t.nature_anxiety_sensitive }}</option>
+                    <option value="self_centered">{{ t.nature_self_centered }}</option>
+                    <option value="emotion_fluctuation">{{ t.nature_emotion_fluctuation }}</option>
+                    <option value="stress_sensitive">{{ t.nature_stress_sensitive }}</option>
+                    <option value="comparison_sensitive">{{ t.nature_comparison_sensitive }}</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+            <div class="nature-select-card">
+              <h3>{{ t.nature_group_f }}</h3>
+              <div class="row-2 compact-row">
+                <div class="field">
+                  <label>{{ t.label_primary }}</label>
+                  <select id="nature_F_primary" name="nature_decision" onchange="validateNaturePair('F')">
+                    <option value="">{{ t.option_select }}</option>
+                    <option value="careful">{{ t.nature_careful }}</option>
+                    <option value="intuition_decision">{{ t.nature_intuition_decision }}</option>
+                    <option value="analysis_decision">{{ t.nature_analysis_decision }}</option>
+                    <option value="avoidance">{{ t.nature_avoidance }}</option>
+                    <option value="strategy">{{ t.nature_strategy }}</option>
+                    <option value="impulsive">{{ t.nature_impulsive }}</option>
+                    <option value="decision">{{ t.nature_decision }}</option>
+                  </select>
+                </div>
+                <div class="field">
+                  <label>{{ t.label_secondary }}</label>
+                  <select id="nature_F_secondary" name="nature_decision" onchange="validateNaturePair('F')">
+                    <option value="">{{ t.option_select }}</option>
+                    <option value="careful">{{ t.nature_careful }}</option>
+                    <option value="intuition_decision">{{ t.nature_intuition_decision }}</option>
+                    <option value="analysis_decision">{{ t.nature_analysis_decision }}</option>
+                    <option value="avoidance">{{ t.nature_avoidance }}</option>
+                    <option value="strategy">{{ t.nature_strategy }}</option>
+                    <option value="impulsive">{{ t.nature_impulsive }}</option>
+                    <option value="decision">{{ t.nature_decision }}</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+            <div class="nature-select-card">
+              <h3>{{ t.nature_group_g }}</h3>
+              <div class="row-2 compact-row">
+                <div class="field">
+                  <label>{{ t.label_primary }}</label>
+                  <select id="nature_G_primary" name="nature_energy" onchange="validateNaturePair('G')">
+                    <option value="">{{ t.option_select }}</option>
+                    <option value="high_energy">{{ t.nature_high_energy }}</option>
+                    <option value="persistence">{{ t.nature_persistence }}</option>
+                    <option value="low_energy">{{ t.nature_low_energy }}</option>
+                    <option value="concentration">{{ t.nature_concentration }}</option>
+                    <option value="fatigue_sensitive">{{ t.nature_fatigue_sensitive }}</option>
+                    <option value="rhythm_stability">{{ t.nature_rhythm_stability }}</option>
+                  </select>
+                </div>
+                <div class="field">
+                  <label>{{ t.label_secondary }}</label>
+                  <select id="nature_G_secondary" name="nature_energy" onchange="validateNaturePair('G')">
+                    <option value="">{{ t.option_select }}</option>
+                    <option value="high_energy">{{ t.nature_high_energy }}</option>
+                    <option value="persistence">{{ t.nature_persistence }}</option>
+                    <option value="low_energy">{{ t.nature_low_energy }}</option>
+                    <option value="concentration">{{ t.nature_concentration }}</option>
+                    <option value="fatigue_sensitive">{{ t.nature_fatigue_sensitive }}</option>
+                    <option value="rhythm_stability">{{ t.nature_rhythm_stability }}</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Card 3. 현재 나의 상태 -->
+        <section class="panel panel-current-state">
+          <h2>{{ t.section_current }}</h2>
+          <p class="panel-desc">{{ t.desc_current_state }}.</p>
+
+          <div class="current-state-grid">
+            <div class="field">
+              <label>{{ t.label_current_goal }}</label>
+              <select name="current_concern" class="goal-select" onchange="validateGoalSelects()">
+                <option value="">{{ t.option_select }}</option>
+                <option value="family_peace">{{ t.goal_family_peace }}</option>
+                <option value="health_recovery">{{ t.goal_health_recovery }}</option>
+                <option value="economic_stability">{{ t.goal_economic_stability }}</option>
+                <option value="performance_jump">{{ t.goal_performance_jump }}</option>
+                <option value="life_margin">{{ t.goal_life_margin }}</option>
+                <option value="social_contribution">{{ t.goal_social_contribution }}</option>
+                <option value="social_recognition">{{ t.goal_social_recognition }}</option>
+                <option value="relationship_improvement">{{ t.goal_relationship_improvement }}</option>
+                <option value="personality_change">{{ t.goal_personality_change }}</option>
+                <option value="keep_job">{{ t.goal_keep_job }}</option>
+                <option value="new_job">{{ t.goal_new_job }}</option>
+                <option value="no_worry">{{ t.goal_no_worry }}</option>
+              </select>
+            </div>
+
+            <div class="field">
+              <label>{{ t.label_current_concern }}</label>
+              <select name="current_concern" class="goal-select" onchange="validateGoalSelects()">
+                <option value="">{{ t.option_select }}</option>
+                <option value="family_peace">{{ t.goal_family_peace }}</option>
+                <option value="health_recovery">{{ t.goal_health_recovery }}</option>
+                <option value="economic_stability">{{ t.goal_economic_stability }}</option>
+                <option value="performance_jump">{{ t.goal_performance_jump }}</option>
+                <option value="life_margin">{{ t.goal_life_margin }}</option>
+                <option value="social_contribution">{{ t.goal_social_contribution }}</option>
+                <option value="social_recognition">{{ t.goal_social_recognition }}</option>
+                <option value="relationship_improvement">{{ t.goal_relationship_improvement }}</option>
+                <option value="personality_change">{{ t.goal_personality_change }}</option>
+                <option value="keep_job">{{ t.goal_keep_job }}</option>
+                <option value="new_job">{{ t.goal_new_job }}</option>
+                <option value="no_worry">{{ t.goal_no_worry }}</option>
+              </select>
+            </div>
+
+            <div class="field">
+              <label>{{ t.label_environment }}</label>
+              <select name="environment_state">
+                <option value="">{{ t.option_select }}</option>
+                <option value="very_poor">{{ t.state_very_poor }}</option>
+                <option value="poor">{{ t.state_poor }}</option>
+                <option value="trying">{{ t.state_trying }}</option>
+                <option value="hopeful">{{ t.state_hopeful }}</option>
+                <option value="ready">{{ t.state_ready }}</option>
+              </select>
+            </div>
+
+            <div class="field">
+              <label>{{ t.label_health }}</label>
+              <select name="health_state">
+                <option value="">{{ t.option_select }}</option>
+                <option value="strong">{{ t.health_strong }}</option>
+                <option value="vital">{{ t.health_vital }}</option>
+                <option value="normal">{{ t.health_normal }}</option>
+                <option value="weak">{{ t.health_weak }}</option>
+                <option value="ill">{{ t.health_ill }}</option>
+              </select>
+            </div>
+          </div>
+        </section>
+
+        <!-- Card 4. 경험 패턴 -->
+        <section class="panel panel-experience">
+          <h2>{{ t.section_experience }}</h2>
+          <p class="section-guide">{{ t.desc_past_experience }}</p>
+
+          <div id="experienceList"></div>
+
+          <div class="experience-actions">
+            <button type="button" class="btn-secondary" onclick="addExperience()">
+              {{ t.add_experience }}
+            </button>
+          </div>
+        </section>
+
+        <!-- Card 5. 실행 -->
+        <section class="panel panel-exec full-span">
+          <h2>{{ t.section_execute }}</h2>
+          <p class="panel-desc">{{ t.desc_execute }}</p>
+          <div class="btn-row">
+            <button type="submit">{{ t.run_analysis }}</button>
+            <button type="button" class="btn-light" onclick="resetForm()">
+              {{ t.reset_input }}
+            </button>
+          </div>
+        </section>
+
+      </div>
+    </form>
+
+    <footer class="page-footer">
+      © IRAI | 근본 분석 지능 연구소
+    </footer>
+
+      {% if error_message %}
+        <section class="panel" style="margin-top:16px; border:1px solid #fecaca; background:#fef2f2;">
+          <h2 style="color:#b91c1c;">오류 안내</h2>
+          <div style="white-space:pre-line;">{{ error_message }}</div>
+        </section>
+      {% endif %}
+
+ {% if result %}
+<section class="panel full-span result-panel" style="margin-top:18px;">
+  <h2>{{ t.result_title }}</h2>
+
+  <div class="subsection">
+    <h3>{{ "1. Current State Diagnosis" if lang == "en" else "1. 현재 상태 진단" }}</h3>
+    <div class="result-text" style="white-space:pre-line;">
+      {{ result.current_status_text }}
+    </div>
+  </div>
+
+  <div class="subsection">
+    <h3>{{ "2. Main Current Issue" if lang == "en" else "2. 현재 핵심 문제" }}</h3>
+    <div class="result-text" style="white-space:pre-line;">
+      {{ result.core_problem_text }}
+    </div>
+  </div>
+
+  <div class="subsection">
+    <h3>{{ "3. Future Flow Diagnosis" if lang == "en" else "3. 앞으로의 흐름 진단" }}</h3>
+    <div class="result-text" style="white-space:pre-line;">
+      {{ result.future_flow_text }}
+    </div>
+  </div>
+
+  {% if result.nature_change_text %}
+  <div class="subsection">
+    <h3>{{ "4. Recommended Adjustment Direction" if lang == "en" else "4. 필요한 행동 조정 방향" }}</h3>
+    <div class="result-text" style="white-space:pre-line;">
+      {{ result.nature_change_text }}
+    </div>
+  </div>
+  {% endif %}
+
+  {% if result.action_summary %}
+  <div class="subsection">
+    <h3>{{ "👉 Take Action Now" if lang == "en" else "👉 지금 바로 실행" }}</h3>
+    <div class="result-text highlight-action">
+      {{ result.action_summary }}
+    </div>
+  </div>
+  {% endif %}
+
+  <div class="subsection">
+    <h3>{{ "5. Intelligence / Talent Axis Analysis" if lang == "en" else "5. 지능/재능 축 분석" }}</h3>
+    <div class="result-text" style="white-space:pre-line;">
+      {{ result.talent_analysis_text }}
+    </div>
+  </div>
+
+  <div class="subsection">
+    <h3>{{ "6. Current Role Fit" if lang == "en" else "6. 현재 직업 적합도" }}</h3>
+    <div class="result-text" style="white-space:pre-line;">
+      {{ result.current_fit_text }}
+    </div>
+  </div>
+
+  <div class="subsection">
+    <h3>{{ "7. Recommended Role Directions" if lang == "en" else "7. 추천 직업군" }}</h3>
+    <div class="result-text" style="white-space:pre-line;">
+      {{ result.recommended_jobs_text }}
+    </div>
+  </div>
+
+  <div class="subsection graph-section">
+    <h3>{{ "Current State / Influence Factors / Future Flow" if lang == "en" else "현재 상태 / 영향 요인 / 미래 흐름" }}</h3>
+
+    <div class="graph-box">
+      <canvas id="stateChart"></canvas>
+    </div>
+
+    <div class="graph-box">
+      <canvas id="vectorChart"></canvas>
+    </div>
+
+    <div class="graph-box">
+      <canvas id="flowChart"></canvas>
+    </div>
+  </div>
+
+  {% if result.common_comment_text %}
+  <div class="comment-box">
+    <div class="comment-box-title">
+      {{ "Reference Note" if lang == "en" else "참고 안내" }}
+    </div>
+
+    <div class="comment-box-text">
+      {{ result.common_comment_text }}
+    </div>
+
+    {% if lang == "en" %}
+    <div class="comment-box-text" style="margin-top:10px; font-size:0.92em; opacity:0.85;">
+      Results are intended for reflective guidance and personal insight, not as absolute psychological or career judgments.
+    </div>
+    {% endif %}
+  </div>
+  {% endif %}
+
+</section>
+{% endif %}
+
+<template id="experienceTemplate">
+  <div class="mini-box experience-box">
+      <h3>{{ t.label_experience_1 }} <span class="exp-num"></span></h3>
+
+      <div class="row-4">
+        <div>
+          <label>{{ t.label_past_job }}</label>
+          <select name="experience_job[]">
+            <option value="">{{ t.option_select }}</option>
+            <option value="농축산어업">{{ t.exp_job_agriculture }}</option>
+            <option value="자영업/사업">{{ t.exp_job_business_owner }}</option>
+            <option value="회사원">{{ t.exp_job_employee }}</option>
+            <option value="공무원/공공직">{{ t.exp_job_public }}</option>
+            <option value="교육직">{{ t.exp_job_education }}</option>
+            <option value="연구/전문직">{{ t.exp_job_professional }}</option>
+            <option value="기능/기술직">{{ t.exp_job_technical }}</option>
+            <option value="문화/예술/체육">{{ t.exp_job_culture }}</option>
+            <option value="보건/복지/돌봄">{{ t.exp_job_healthcare }}</option>
+            <option value="서비스/판매">{{ t.exp_job_service_sales }}</option>
+            <option value="가정/전업주부">{{ t.exp_job_homemaker }}</option>
+            <option value="학생">{{ t.exp_job_student }}</option>
+            <option value="프리랜서">{{ t.exp_job_freelancer }}</option>
+            <option value="일용직/알바">{{ t.exp_job_part_time }}</option>
+            <option value="은퇴/전환기">{{ t.exp_job_retired_transition }}</option>
+            <option value="무직/기타">{{ t.exp_job_unemployed_other }}</option>
+          </select>
+        </div>
+
+        <div>
+          <label>{{ t.label_field }}</label>
+          <select name="experience_field[]">
+            <option value="">{{ t.option_select }}</option>
+            <option value="연구·분석 분야">{{ t.exp_field_research }}</option>
+            <option value="실행·사업 분야">{{ t.exp_field_execution }}</option>
+            <option value="관계·중재 분야">{{ t.exp_field_relationship }}</option>
+            <option value="표현·창작 분야">{{ t.exp_field_expression }}</option>
+            <option value="관리·안정 분야">{{ t.exp_field_management }}</option>
+            <option value="감지·직관 분야">{{ t.exp_field_sensing }}</option>
+          </select>
+        </div>
+
+        <div>
+          <label>{{ t.label_result }}</label>
+          <select name="experience_result[]">
+            <option value="">{{ t.option_select }}</option>
+            <option value="성공">{{ t.exp_result_success }}</option>
+            <option value="안정">{{ t.exp_result_stable }}</option>
+            <option value="보통">{{ t.exp_result_normal }}</option>
+            <option value="사퇴">{{ t.exp_result_resigned }}</option>
+            <option value="실패">{{ t.exp_result_failure }}</option>
+          </select>
+        </div>
+
+        <div>
+          <label>{{ t.label_main_reason }}</label>
+          <select name="experience_reason[]">
+            <option value="">{{ t.option_select }}</option>
+            <option value="역량 적합">{{ t.exp_reason_fit }}</option>
+            <option value="관계 문제">{{ t.exp_reason_relationship }}</option>
+            <option value="건강 문제">{{ t.exp_reason_health }}</option>
+            <option value="경제 여건">{{ t.exp_reason_economic }}</option>
+            <option value="실행 부족">{{ t.exp_reason_execution }}</option>
+            <option value="방향 혼란">{{ t.exp_reason_direction }}</option>
+            <option value="외부 환경">{{ t.exp_reason_external }}</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="experience-actions-inline">
+        <button type="button" onclick="removeExperience(this)">{{ t.delete_button }}</button>
+      </div>    </div>
+  </template>
+  <script>
+    function renumberExperiences() {
+      document.querySelectorAll('.experience-box').forEach((box, index) => {
+        const num = box.querySelector('.exp-num');
+        if (num) num.textContent = index + 1;
+      });
+    }
+
+    function addExperience() {
+      const template = document.getElementById('experienceTemplate');
+      const container = document.getElementById('experienceList');
+      const clone = template.content.cloneNode(true);
+      container.appendChild(clone);
+      renumberExperiences();
+    }
+
+    function removeExperience(button) {
+      const box = button.closest('.experience-box');
+      if (box) {
+        box.remove();
+        renumberExperiences();
+      }
+    }
+
+    document.addEventListener('DOMContentLoaded', function () {
+      const container = document.getElementById('experienceList');
+      if (container && container.children.length === 0) {
+        addExperience();
+      }
+    });
+  </script>
+  <script>
+    function resetForm() {
+      const form = document.getElementById("raisHumanForm");
+      if (form) {
+        form.reset();
+      }
+
+      updateEssenceDesc();
+
+      const resultPanel = document.querySelector(".result-panel");
+      if (resultPanel) {
+        resultPanel.remove();
+      }
+    }
+  </script>
+
+  <script>
+
+    function validateDuplicateSelects(selector, message) {
+      const selects = Array.from(document.querySelectorAll(selector));
+      const values = selects.map(el => el.value).filter(Boolean);
+      const duplicated = values.find((v, i) => values.indexOf(v) !== i);
+      if (!duplicated) return;
+      alert(message);
+      const last = selects.slice().reverse().find(el => el.value === duplicated);
+      if (last) last.value = "";
+    }
+
+    function validateEssenceSelects() {
+      validateDuplicateSelects('.essence-select', '같은 본질은 중복 선택할 수 없습니다.');
+    }
+
+    function validateGoalSelects() {
+      validateDuplicateSelects('.goal-select', '같은 목표/고민은 중복 선택할 수 없습니다.');
+    }
+
+    function validateNaturePair(group) {
+      const primary = document.getElementById(`nature_${group}_primary`);
+      const secondary = document.getElementById(`nature_${group}_secondary`);
+      if (primary && secondary && primary.value && secondary.value && primary.value === secondary.value) {
+        alert('주 성향과 보조 성향은 다르게 선택해 주세요.');
+        secondary.value = '';
+      }
+    }
+
+    function limitCheckboxGroup(name, max, message) {
+      document.querySelectorAll(`input[name="${name}"]`).forEach((checkbox) => {
+        checkbox.addEventListener("change", function () {
+          const checked = document.querySelectorAll(`input[name="${name}"]:checked`);
+          if (checked.length > max) {
+            this.checked = false;
+            alert(message);
+          }
+        });
+      });
+    }
+
+    document.addEventListener("DOMContentLoaded", function () {
+      limitCheckboxGroup("essence", 3, "본질은 최대 3개까지 선택할 수 있습니다.");
+      [
+        "nature_action",
+        "nature_cognition",
+        "nature_social",
+        "nature_change",
+        "nature_inner",
+        "nature_decision",
+        "nature_energy"
+      ].forEach((name) => {
+        limitCheckboxGroup(name, 2, "본성은 각 그룹에서 최대 2개까지 선택할 수 있습니다.");
+      });
+    });
+  </script>
+
+  <script>
+    document.addEventListener("DOMContentLoaded", function () {
+
+      {% if result %}
+
+      const isEnglish = "{{ lang }}" === "en";
+
+      function trKoEn(text) {
+        if (!isEnglish || !text) return text;
+
+          return text
+          .replace('Threat:', 'T:')
+          .replace('Opportunity:', 'O:')
+
+          .replace('Expression orientation alignment gap', 'Expression gap')
+          .replace('Learning orientation alignment gap', 'Learning gap')
+          .replace('Relation orientation alignment gap', 'Relation gap')
+
+          .replace('orientation alignment gap', 'gap')
+
+          .replace('Execution drive resource', 'Drive')
+          .replace('execution drive resource', 'Drive')
+
+          .replace('cognitive / judgment resource', 'Cognition')
+          .replace('thinking / judgment resource', 'Cognition')
+
+          .replace('emotional stability support', 'Stability')
+          .replace('relational support resource', 'Relation')
+          .replace('건강 기반', 'Health Base')
+          .replace('실행 흐름', 'Execution Flow')
+          .replace('사고/판단', 'Thinking / Judgment')
+          .replace('관계 흐름', 'Relational Flow')
+          .replace('현재 상태', 'Current State')
+          .replace('영향 강도', 'Influence Strength')
+          .replace('미래 흐름 확률', 'Future Flow Probability')
+          .replace('위협:', 'Threat:')
+          .replace('기회:', 'Opportunity:')
+          .replace('개선 흐름', 'Improvement')
+          .replace('유지 흐름', 'Maintenance')
+          .replace('위협 흐름', 'Threat')
+          .replace('건강·정서 안정 보완', 'Health / Emotional Stability')
+          .replace('실행 연결 부족', 'Execution Alignment Gap')
+          .replace('현실 여건 압박', 'Real-World Pressure')
+          .replace('사고·판단 자원', 'Thinking / Judgment Resource')
+          .replace('관계·연결 자원', 'Relational Resource')
+          .replace('건강·안정 기반', 'Health / Stability Base')
+          .replace('실행 추진 자원', 'Execution Resource');
+      }
+
+      // -----------------------------
+      // 1. 현재 상태 그래프
+      // -----------------------------
+      new Chart(document.getElementById('stateChart'), {
+        type: 'bar',
+        data: {
+          labels: [
+            trKoEn('건강 기반'),
+            trKoEn('실행 흐름'),
+            trKoEn('사고/판단'),
+            trKoEn('관계 흐름')
+          ],
+          datasets: [{
+            label: trKoEn('현재 상태'),
+            data: [
+              {{ result.root_state.stability or 60 }},
+              {{ result.root_state.drive or 60 }},
+              {{ result.root_state.cognition or 60 }},
+              {{ result.root_state.relation or 60 }}
+            ]
+          }]
+        },
+        options: {
+          responsive: true,
+          layout: {
+            padding: {
+              left: 20
+            }
+          },
+          scales: {
+            y: {
+              min: 0,
+              max: 100,
+              ticks: {
+                stepSize: 20,
+                autoSkip: false,
+                font: {
+                  size: 13
+                }
+              }
+            },
+
+            x: {
+              ticks: {
+                font: {
+                  size: 13
+                }
+              }
+            }
+          },
+
+          plugins: {
+            legend: {
+              labels: {
+                font: {
+                  size: 15
+                }
+              }
+            }
+          }
+        }
+      });
+
+      // -----------------------------
+      // 2. 위협 vs 기회 그래프
+      // -----------------------------
+      function shortenVectorLabel(text) {
+        if (!text) return text;
+
+        let shortened = text
+          .replace('바로 실천으로 이어지지 않는 흐름', '실천 부족')
+          .replace('실천으로 이어지지 않는 흐름', '실천 부족')
+          .replace('실제 행동으로 이어지지 않는 흐름', '행동 부족')
+
+          .replace('안정성 활용이 충분히 이루어지지 않는 상태', '안정성 활용 여지')
+          .replace('안전성 활용이 충분히 이루어지지 않는 상태', '안전성 활용 여지')
+          .replace('관계성 활용이 충분히 이루어지지 않는 상태', '관계성 활용 여지')
+          .replace('추진성 활용이 충분히 이루어지지 않는 상태', '추진성 활용 여지')
+          .replace('학습성 활용이 충분히 이루어지지 않는 상태', '학습성 활용 여지')
+
+          .replace('표현성은 가지고 있지만, 바로 실천으로 이어지지 않는 흐름', '표현성은 있지만, 실천 부족')
+
+          .replace('관계성은 가지고 있지만, 실천 부족', '관계성은 있지만, 실천 부족')
+          .replace('추진성은 가지고 있지만, 실천 부족', '추진성은 있지만, 실천 부족')
+          .replace('반응성은 가지고 있지만, 실천 부족', '반응성은 있지만, 실천 부족')
+          .replace('표현성은 가지고 있지만, 실천 부족', '표현성은 있지만, 실천 부족')
+          .replace('안전성은 가지고 있지만, 실천 부족', '안전성은 있지만, 실천 부족')
+
+          .replace('분석/판단 자원', '분석·판단 강점')
+          .replace(' 발현 억제', ' 억제')
+          .replace(' 발현 강화', ' 강화');
+
+        return trKoEn(shortened);
+      }
+
+      new Chart(document.getElementById('vectorChart'), {
+        type: 'bar',
+        data: {
+          labels: [
+            {% for t in result.threat_vectors %}
+              shortenVectorLabel("위협: {{ t.factor }}"),
+            {% endfor %}
+            {% for o in result.opportunity_vectors %}
+              shortenVectorLabel("기회: {{ o.factor }}"),
+            {% endfor %}
+          ],
+          datasets: [{
+            label: trKoEn('영향 강도'),
+            data: [
+              {% for t in result.threat_vectors %}
+                {{ t.score }},
+              {% endfor %}
+              {% for o in result.opportunity_vectors %}
+                {{ o.score }},
+              {% endfor %}
+            ]
+          }]
+        },
+        options: {
+          indexAxis: 'y',
+          responsive: true,
+
+          layout: {
+            padding: {
+              left: 60
+            }
+          },
+
+          scales: {
+            x: {
+              min: 0,
+              max: 100
+            }
+          }
+        }
+      });
+
+      // -----------------------------
+      // 3. 미래 흐름 그래프
+      // -----------------------------
+      new Chart(document.getElementById('flowChart'), {
+        type: 'pie',
+        data: {
+          labels: [
+            {% for k, v in result.path_distribution.items() %}
+              trKoEn("{{ k }}"),
+            {% endfor %}
+          ],
+          datasets: [{
+            label: trKoEn('미래 흐름 확률'),
+            data: [
+              {% for k, v in result.path_distribution.items() %}
+                {{ v }},
+              {% endfor %}
+            ]
+          }]
+        },
+        options: {
+          responsive: true
+        }
+      });
+
+      {% endif %}
+    });
+  </script>
+</body>
+</html>

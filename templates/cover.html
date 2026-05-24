@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="{{ lang or 'ko' }}">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{{ t.app_title }}</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+
+<body class="cover-body">
+
+<div class="cover-container">
+  <div class="cover-box">
+
+    <div class="language-switch">
+      <a href="/?lang=ko">한국어</a>
+      |
+      <a href="/?lang=en">English</a>
+    </div>
+
+    <div class="brand">{{ t.brand }}</div>
+
+    <h1 class="title">
+      {{ t.app_title }}
+    </h1>
+
+    <p class="subtitle">
+      {{ t.subtitle }}
+    </p>
+
+    <p class="notice">
+      {{ t.notice }}
+    </p>
+
+    <div class="features">
+      <div>{{ t.feature_1 }}</div>
+      <div>{{ t.feature_2 }}</div>
+      <div>{{ t.feature_3 }}</div>
+    </div>
+
+    <div class="actions">
+      <a href="/analyze?lang={{ lang }}" class="btn-main">{{ t.start_button }}</a>
+      <a href="/guide?lang={{ lang }}" class="btn-sub">{{ t.guide_button }}</a>
+    </div>
+
+    <div class="footer-note">
+      <p>{{ t.disclaimer }}</p>
+      <p>Developed by Institute of Root Analysis Intelligence (IRAI) · © IRAI. All rights reserved.</p>
+    </div>
+
+  </div>
+</div>
+
+</body>
+</html>
